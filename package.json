@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
 "scripts": {
-  "start": "node app.js"
+  "start": "react-scripts start",
+  "build": "react-scripts build"
 }
 ,
   "keywords": [],
