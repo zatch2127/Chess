@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess Game</title>
+    <style>
+     /* General Chessboard Styling */
+.chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 450px;
+  height: 450px;
+  border: 4px solid #333;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  margin: 20px auto;
+  border-radius: 10px;
+}
+
+/* Light and Dark Squares */
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.square.light {
+  background-color: #f5deb3; /* Warm beige for light squares */
+}
+
+.square.dark {
+  background-color: #8b5a2b; /* Rich brown for dark squares */
+}
+
+/* Pieces Styling */
+.piece {
+  font-size: 36px;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.piece:hover {
+  transform: scale(1.2); /* Slight zoom on hover */
+  color: #ffd700; /* Golden glow on hover */
+}
+
+/* White Pieces */
+.piece.white {
+  color: #f9f9f9;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8));
+}
+
+/* Black Pieces */
+.piece.black {
+  color: #000;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+}
+.highlight {
+  outline: 2px solid #00ff00; /* Green outline for highlighted squares */
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.8); /* Glowing effect */
+  z-index: 1;
+}
+
+
+/* Chessboard Flip */
+.chessboard.flipped {
+  transform: rotate(180deg);
+}
+
+/* Flip individual squares for correct orientation */
+.flipped .square {
+  transform: rotate(180deg);
+}
+
+/* Board Flip */
+#board.flip {
+  transform: rotate(180deg);
+  transform-origin: center;
+}
+
+/* Status Box Styling */
+.status {
+  margin-top: 20px;
+  font-size: 20px;
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Add a Subtle Glow to the Active Player's Turn */
+.status.active-white {
+  color: #f9f9f9;
+  text-shadow: 0 0 10px #f9f9f9;
+}
+
+.status.active-black {
+  color: #000;
+  text-shadow: 0 0 10px #000;
+}
+
+/* Add Responsiveness */
+@media (max-width: 768px) {
+  .chessboard {
+    width: 100%;
+    height: auto;
+    max-width: 320px;
+  }
+
+  .piece {
+    font-size: 28px;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="chessboard"></div>
+    <div class="status">Loading...</div>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="/js/chessgame.js"></script>
+    <script>
+      const statusElement = document.querySelector(".status");
+socket.on("turn", (turn) => {
+  if (turn === "w") {
+    statusElement.textContent = "White's Turn";
+    statusElement.className = "status active-white";
+  } else {
+    statusElement.textContent = "Black's Turn";
+    statusElement.className = "status active-black";
+  }
+});
+
+    </script>
+  </body>
+</html>

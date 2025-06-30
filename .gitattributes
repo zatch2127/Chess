@@ -1,0 +1,11 @@
+# Set default behavior
+* text=auto
+
+# Force LF for all JS/TS/JSON/etc.
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.css text eol=lf
+*.html text eol=lf
