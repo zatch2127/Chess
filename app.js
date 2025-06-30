@@ -70,6 +70,7 @@ io.on("connection", (socket) => {
               message: `${winner} wins by checkmate! 🎉`,
               celebration: true
             };
+           
           } else if (chess.isStalemate()) {
             gameResult = {
               type: "stalemate",

@@ -74,42 +74,48 @@ const renderBoard = () => {
 const isPawnPromotion = (source, target) => {
   const board = chess.board();
   const piece = board[source.row][source.col];
-  
-  if (!piece || piece.type !== 'p') return false;
-  
+
+  if (!piece || piece.type !== "p") return false;
+
   // White pawn reaching rank 8 (row 0) or black pawn reaching rank 1 (row 7)
-  return (piece.color === 'w' && target.row === 0) || 
-         (piece.color === 'b' && target.row === 7);
+  return (
+    (piece.color === "w" && target.row === 0) ||
+    (piece.color === "b" && target.row === 7)
+  );
 };
 
 // Function to show promotion dialog
 const showPromotionDialog = (source, target, callback) => {
   const promotionOptions = [
-    { piece: 'q', symbol: playerRole === 'w' ? '♕' : '♛', name: 'Queen' },
-    { piece: 'r', symbol: playerRole === 'w' ? '♖' : '♜', name: 'Rook' },
-    { piece: 'b', symbol: playerRole === 'w' ? '♗' : '♝', name: 'Bishop' },
-    { piece: 'n', symbol: playerRole === 'w' ? '♘' : '♞', name: 'Knight' }
+    { piece: "q", symbol: playerRole === "w" ? "♕" : "♛", name: "Queen" },
+    { piece: "r", symbol: playerRole === "w" ? "♖" : "♜", name: "Rook" },
+    { piece: "b", symbol: playerRole === "w" ? "♗" : "♝", name: "Bishop" },
+    { piece: "n", symbol: playerRole === "w" ? "♘" : "♞", name: "Knight" },
   ];
 
   // Create promotion dialog
-  const dialog = document.createElement('div');
-  dialog.className = 'promotion-dialog';
+  const dialog = document.createElement("div");
+  dialog.className = "promotion-dialog";
   dialog.innerHTML = `
     <div class="promotion-content">
       <h3>Choose promotion piece:</h3>
       <div class="promotion-options">
-        ${promotionOptions.map(option => `
+        ${promotionOptions
+          .map(
+            (option) => `
           <button class="promotion-option" data-piece="${option.piece}">
             <span class="promotion-symbol">${option.symbol}</span>
             <span class="promotion-name">${option.name}</span>
           </button>
-        `).join('')}
+        `
+          )
+          .join("")}
       </div>
     </div>
   `;
 
   // Add styles
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
     .promotion-dialog {
       position: fixed;
@@ -158,13 +164,13 @@ const showPromotionDialog = (source, target, callback) => {
       color: #666;
     }
   `;
-  
+
   document.head.appendChild(style);
   document.body.appendChild(dialog);
 
   // Handle option selection
-  dialog.querySelectorAll('.promotion-option').forEach(button => {
-    button.addEventListener('click', () => {
+  dialog.querySelectorAll(".promotion-option").forEach((button) => {
+    button.addEventListener("click", () => {
       const selectedPiece = button.dataset.piece;
       document.body.removeChild(dialog);
       document.head.removeChild(style);
@@ -176,7 +182,7 @@ const showPromotionDialog = (source, target, callback) => {
 const handleMove = (source, target) => {
   const from = `${String.fromCharCode(97 + source.col)}${8 - source.row}`;
   const to = `${String.fromCharCode(97 + target.col)}${8 - target.row}`;
-  
+
   // Check if this is a pawn promotion
   if (isPawnPromotion(source, target)) {
     showPromotionDialog(source, target, (promotionPiece) => {
@@ -240,16 +246,19 @@ socket.on("move", (move) => {
 // Game status and turn display
 socket.on("turn", (turn) => {
   if (playerRole === turn) {
-    statusElement.innerText = `Your Turn (${turn === 'w' ? 'White' : 'Black'})`;
+    statusElement.innerText = `Your Turn (${turn === "w" ? "White" : "Black"})`;
   } else {
-    statusElement.innerText = `Opponent's Turn (${turn === 'w' ? 'White' : 'Black'})`;
+    statusElement.innerText = `Opponent's Turn (${
+      turn === "w" ? "White" : "Black"
+    })`;
   }
 });
 
 socket.on("gameOver", (result) => {
   // Handle different game over scenarios
   let message = "";
-  if (typeof result === 'string') {
+
+  if (typeof result === "string") {
     message = result;
   } else if (result && result.winner) {
     message = `Game Over - ${result.winner} wins!`;
@@ -258,7 +267,31 @@ socket.on("gameOver", (result) => {
   } else {
     message = "Game Over";
   }
+
   statusElement.innerText = message;
+
+  // Add some debugging
+  console.log("Creating rematch button...");
+
+  const rematchBtn = document.createElement("button");
+  rematchBtn.innerText = "Rematch";
+  rematchBtn.style.display = "block"; // Force display
+  rematchBtn.style.marginTop = "10px"; // Add some spacing
+
+  rematchBtn.onclick = function () {
+    console.log("Rematch button clicked!"); // Debug log
+    location.reload(true);
+    console.log("Working"); // Make sure this function exists and works
+  };
+
+  // Clear any existing buttons first
+  const existingBtn = statusElement.querySelector("button");
+  if (existingBtn) {
+    existingBtn.remove();
+  }
+
+  statusElement.appendChild(rematchBtn);
+  console.log("Button appended:", rematchBtn); // Verify it was added
 });
 
 socket.on("invalidMove", (move) => {
@@ -268,4 +301,3 @@ socket.on("invalidMove", (move) => {
 
 // Initial render
 renderBoard();
-
