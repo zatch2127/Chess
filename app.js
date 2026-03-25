@@ -14,7 +14,6 @@ let currentPlayer = "w";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 io.on("connection", (socket) => {
@@ -118,14 +117,9 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Chess Game",
-    players,
-    currentPlayer,
-  });
+  res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 server.listen(3000, () => {
   console.log("Server running at http://localhost:3000");
 });
-
